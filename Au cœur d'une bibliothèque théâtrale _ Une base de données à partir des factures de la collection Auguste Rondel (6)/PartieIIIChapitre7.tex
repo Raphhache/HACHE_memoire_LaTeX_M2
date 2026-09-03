@@ -1,0 +1,22 @@
+\chapter{Bilan des différents modes d'implémentation de la base}
+
+Afin d'en améliorer le modèle et d'en explorer les possibilités, la base de données a déjà été alimentée à ce stade du travail par plus de cent cinquante factures. Cela a également permis de tirer des conclusions sur les modes d'alimentation de la base en elle-même et de réfléchir aux méthodes à employer à l'avenir. 
+
+\section{Premières réflexions sur l'utilité potentielle de l'IA pour traiter ce corpus}
+
+À une époque où l'intelligence artificielle (IA) se perfectionne dans la reconnaissance d'écritures, notamment manuscrites, la question de son utilisation doit nécessairement être posée dans le cadre de l'exploitation d'un corpus aussi massif que le nôtre. En effet, la visée finale de cette base serait de recenser les données de l'ensemble des factures issues des archives d'Auguste Rondel. Comme nous l'avons vu, ces factures remplissent une vingtaine de boîtes d'archives. Il en existe donc au moins une dizaine de milliers. Si l'indexation de toutes les factures paraît déjà très longue en imaginant que l'on puisse utiliser une solution d'automatisation, il semble totalement hors de portée de saisir toutes les données à la main. En effet, cela nécessiterait des années de travail et une mobilisation à temps plein de plusieurs personnes, ce qui n'est pas envisageable. Nous avons donc très rapidement réfléchi aux solutions dont nous disposions pour utiliser l'IA dans la transcription des factures. 
+
+La solution la plus efficace et privilégiée à ce stade est l'utilisation de \emph{Gemini}\index{Gemini}, assistant IA de Google. Cette utilisation, dont les modalités seront détaillées ultérieurement, consiste à récupérer un maximum d'informations des factures, puis à les structurer au format CSV afin de pouvoir les importer dans la base. Les travaux les plus concluants sont disponibles en annexe \footnote{Voir dans l'annexe E, \enquote{\nameref{prompt gemini}}.}.
+
+
+\section{Estimations du temps pris par les différents modes de transcription}
+
+Au-delà d'alimenter la base, nos expérimentations nous ont aussi permis d'estimer le temps moyen que peuvent prendre ces différentes façons d'exploiter les factures. Ces estimations confirment largement le besoin d'automatiser le traitement du corpus. Le temps pris par la saisie manuelle de factures a notamment été mesuré sur le dossier consacré à la librairie  Claudin. Ce dossier est le seul à avoir été entièrement saisi manuellement dans la base et est constitué de 16 factures, chacune composée de moins de 10 titres. Ce dossier, de petite taille et dont les factures contenaient assez peu d'informations par rapport au reste de l'échantillon, a été saisi sur une durée de trois jours environ. La saisie manuelle de certaines factures a été chronométrée. Variable selon les cas, elle va de 15 à 20 minutes pour les factures les moins fournies à environ une heure pour les plus denses. 
+
+Nous avons ensuite estimé le temps que prenait la principale solution d'utilisation de l'IA que nous avions à disposition, à savoir \emph{Gemini}\index{Gemini}. Notre usage a surtout servi à transcrire des factures de la librairie Hermal qui, à l'inverse des factures précédente, figurent parmi les plus denses de notre échantillon. Contenant une dizaine de lignes chacune, celles-ci comportent beaucoup d'informations exploitables sur chaque titre acheté. Nos estimations réalisées sur cinq de ces factures ont montré que leur traitement automatique suivi de l'import des données nécessitait entre 4 et 6 minutes au total. 
+
+La conclusion de ces estimations est très claire : le traitement des factures par IA, en particulier en utilisant \emph{Gemini}\index{Gemini}, est beaucoup plus rapide que la saisie manuelle. 
+
+\section{Limites de ces estimations}
+
+Malgré tout, il est nécessaire de rester prudent sur ces estimations. Celles-ci ont été faites à partir d'un échantillon qui, comme nous l'avons dit, n'est pas représentatif de l'ensemble des factures. Si nos conclusions sont valables à cette échelle  restreinte, une part d'incertitude demeure car le corpus est massif. Il n'est donc pas possible de tout anticiper ni de se projeter sur l'exploitation du corpus dans son ensemble, car nous n'en avons traité qu'une infime partie pour l'instant. 

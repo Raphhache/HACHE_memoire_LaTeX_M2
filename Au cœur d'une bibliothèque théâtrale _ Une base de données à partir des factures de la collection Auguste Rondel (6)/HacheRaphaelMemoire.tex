@@ -1,0 +1,785 @@
+% !TeX program = lualatex
+%Document vide aux normes de l'École nationale des Chartes
+%crée par J.B. Camps
+%Dernières modifications E. Rouquette (03/2026)
+
+%%%%%%%%%%%%%%%%%%%%%% PRÉAMBULE
+
+
+%%%%%%%%%%%%%% partie obligatoire du préambule
+\documentclass[12pt,twoside]{book}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{french}%indiquer la langue principale du document
+%\setotherlanguage{} %indiquer les autres langues utilisée
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PACKAGES UTILISÉS
+
+\usepackage{csquotes} % les guillemets français
+\usepackage{lettrine} %faire une lettrine (pas obligatoire)
+
+\usepackage[style=enc,sorting=nyt,maxbibnames=10, backend=biber]{biblatex}%charger le style de l'EnC (téléchargeable ici https://ctan.org/pkg/biblatex-enc)
+\addbibresource{./BiblioHistoireASP.bib}
+\addbibresource{./BiblioArchives.bib}
+\addbibresource{./BiblioHistoireLivre.bib}
+\addbibresource{./BiblioModelisationTraitementdonnees.bib}%le fichier bibliographique. Exemple de chemin à partir du dossier où se trouve le document maître:Exemple ./dossierA/fichier.bib
+\defbibheading{sources}{\subsection*{Sources utilisées pendant le stage}} % Sert à diviser la bibliographie en différentes sections 
+\defbibheading{bnf}{\subsection*{Département des Arts du spectacle}} 
+\defbibheading{livre}{\subsection*{Histoire du livre}}
+\defbibheading{donnees}{\subsection*{Traitement de données : modélisation, bases de données et datavisualisations}}
+\defbibheading{heurist}{\subsection*{Documentation sur \emph{Heurist}}}
+\defbibheading{IA}{\subsection*{Intelligence artificielle}}
+
+
+%%%Faire un ou plusieurs index
+ %pour faire un ou plusieurs index
+\usepackage{imakeidx}
+\makeindex[title={Index des logiciels}]%commande pour générer l'index
+
+
+%RAJOUTEZ ICI VOS PACKAGES
+
+\usepackage{subcaption}
+\usepackage{pdfpages}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CONFIGURATION DE MISE EN PAGE
+
+%%%%%% Les compteurs (sections, subsections, etc)
+
+
+%%%%%% Les compteurs (sections, subsections, etc)
+\renewcommand{\thesection}{\Roman{section}.}%On ne fait apparaître que le numéro de la section
+\renewcommand{\thesubsection}{\arabic{subsection}.}%subsection en chiffres arabes
+\renewcommand{\thesubsubsection}{\alph{subsubsection}.}%subsubsection en lettres minuscules
+%Si l'on veut faire apparaître les subsubsection dans le table des matières (à commenter sinon)
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}  % La subsubsection (profondeur=3 dans la table des matières) apparait numérotée dans la TdM
+
+
+
+%%%%%  Configurer le document selon les normes de l'école
+
+\usepackage[margin=2.5cm]{geometry} %marges
+\usepackage{setspace} % espacement qui permet ensuite de définir un interligne
+\onehalfspacing % interligne de 1.5
+\setlength\parindent{1cm} % indentation des paragraphes à 1 cm
+\raggedbottom % évite d'étirer verticalement les pages peu remplies
+
+%%%%% Mise en forme des headers (haut de page)
+
+\usepackage{fancyhdr} %package utilisé pour modifier les headers
+\pagestyle{fancy} %utiliser ses propres choix de mise en page et non ceux par défaut du package
+
+%\setlength\headheight{16pt}%la hauteur des headers
+
+\setlength{\headheight}{27pt}
+\addtolength{\topmargin}{-11pt} %MODIFICATION : Réglage des hauteurs et des marges pour supprimer les avertissements à ce sujet
+%%la façon dont les sections apparaissent dans les en-tête:
+
+%\renewcommand{\sectionmark}[1]{\markright{\small\textit{\thesection~\  #1}}}%Faire apparaître dans les headers les sections en  petit et en italiques
+\renewcommand{\sectionmark}[1]{}%Commenter la lign précédetne et mettre celle-ci pour ne pas avoir le titre des sections dans le header
+
+%% réglages propres à frontmatter
+
+\appto\frontmatter{\pagestyle{fancy}%
+	\renewcommand{\chaptermark}[1]{\markboth{\small\textit{#1}}{}}% ne pas faire apparaître de <<numéro>> de chapitre dans les chapitres non numérotés (front: l'introduction, els remerciement, etc)
+}
+
+%% réglages propres à mainmatter
+
+%\appto\mainmatter{
+%\renewcommand{\chaptermark}[1]{\markboth{\small\chaptername~\thechapter~--\ \textit{#1}}{}}%faire apparaître dans les headers les sections en  petit et en italiques
+%\renewcommand{\chaptermark}[1]{}%Commenter la ligne précédente et mettre celle-ci pour ne pas avoir le titre des chapitres  dans le header}
+
+%% réglages propres aux annexes
+
+\appto\appendix{
+	\renewcommand{\chaptermark}[1]{\markboth{\small~Annexe \thechapter~--\ \textit{#1}}{}}%faire apparaître dans les headers le nom des annexes
+	%\renewcommand{\chaptermark}[1]{}%Commenter la ligne précédente et mettre celle-ci pour ne pas avoir le titre des chapitres  dans le header
+}
+
+
+
+
+%indiquer des règles d'hyphénation pour des mots précis si besoin
+%\begin{hyphenrules}{french}
+%	\hyphenation{}
+%\end{hyphenrules}
+
+
+%%%%%%% Package hyperref
+
+% A mettre après les autres appels de packages car redéfinit certaines commandes).
+
+\usepackage{xurl} % permet de couper proprement les URL longues
+\usepackage[colorlinks=false, breaklinks=true, pdfusetitle, pdfsubject ={Mémoire HN}, pdfkeywords={les mots-clés}]{hyperref} %
+\usepackage[numbered]{bookmark}%va avec hyperref; marche mieux pour les signets. l'option numbered: les signets dans le pdf sont numérotés
+
+% Compléter pdfsubjet et pdfkeywords
+%Explication des options de hyperref (modifiables)
+% hyperindex=false
+% colorlinks=false: pour que le cadre des liens n'apparaisse pas à l'impression
+% breaklinks permet d'avoir des liens allant sur pusieurs lignes
+%pdfusetitle: utiliser \author et \title pour produire le nom et le titre du pdf
+
+% Redéfinit le mot-clé pour les figures :
+\addto\captionsfrench{\renewcommand{\figurename}{Fig.}}
+
+%avec overleaf, utiliser :
+%\usepackage[xetex]{hyperref}
+%\hypersetup{
+	%	pdfauthor = {Prénom Nom},
+	%	pdftitle = {titre},
+	%	pdfsubject = {sujet},
+	%	pdfkeywords = {premier mot-clé} {deuxième mot-clé} {troisième mot-clé} {etc}
+	%}
+
+\usepackage{graphicx}
+
+
+%%%%%%%%%%%%%%%%%%%% Package glossaries
+
+%Exception: il faut le charger APRÈS hyperref
+%\usepackage[toc=true]{glossaries}
+%\makeglossaries
+%avec TexStudio: F9 pour compiler le glossaire (s'il y a aussi un index)
+
+%mettre les entrées du glossaire ici ou les mettre dans un fichier à part que l'on appelle ici par \loadglsentries{nom_du_fichier.tex}
+
+%Structure d'une entrée de glossaire
+%\newglossaryentry{}{%
+%	name={},%
+%	description={}
+%}
+
+
+
+
+%%%%%%%%%%%%%%%%%% DÉFINITION DES COMMANDES ET ENVIRONNMENTS
+
+
+
+
+
+
+
+ %%%%%%%%%%%%%% INFORMATIONS POUR LA PAGE DE TITRE
+
+\author{Raphaël \textsc{Hache} - M2 TNAH}
+\title{Au cœur d'une bibliothèque théâtrale : Une base de données à partir des factures de la collection Auguste Rondel}
+
+
+%%%%%%%%%%%%%%%%%%%%%% DOCUMENT
+\begin{document}
+	\begin{titlepage}
+		\begin{center}
+			
+			\bigskip
+			
+			\begin{large}				
+				ÉCOLE NATIONALE DES CHARTES\\
+				UNIVERSITÉ PARIS, SCIENCES \& LETTRES
+			\end{large}
+			\begin{center}\rule{2cm}{0.02cm}\end{center}
+			
+			\bigskip
+			\bigskip
+			\bigskip
+			\begin{Large}
+				\textbf{Raphaël Hache}\\
+			\end{Large}
+		%selon le cas
+			\begin{normalsize} \textit{licencié ès histoire}\\
+			\end{normalsize}
+			
+			\bigskip
+			\bigskip
+			\bigskip
+			
+			\begin{Huge}
+				\textbf{Au cœur d'une bibliothèque théâtrale : }\\
+			\end{Huge}
+			\bigskip
+			\bigskip
+			\begin{LARGE}
+				\textbf{une base de données à partir des factures de la collection Auguste Rondel}\\
+			\end{LARGE}
+			
+			\bigskip
+			\bigskip
+			\bigskip
+			\begin{large}
+				Sous la direction de \textbf{Marina Hervieu}
+			\end{large}
+			\vfill
+			
+			\begin{large}
+				Mémoire 
+				pour le diplôme de master \\
+				\enquote{Technologies numériques appliquées à l'histoire} \\
+				\bigskip
+				2026
+			\end{large}
+			
+		\end{center}
+	\end{titlepage}
+
+	\thispagestyle{empty}	
+	\cleardoublepage
+	
+\frontmatter
+
+	\chapter{Résumé}
+\medskip
+	Ce mémoire intitulé \enquote{Au cœur d'une bibliothèque théâtrale : une base de données à partir des factures de la collection Auguste Rondel} étudie les différentes étapes de la conception d’une base de données avec le logiciel \emph{Heurist} dans le cadre d’un projet de recherche porté par le département des Arts du spectacle. Ce projet 
+vise au traitement, à l’exploitation et à la valorisation des archives liées à la bibliothèque d’Auguste Rondel. Cette collection théâtrale, unique par son ampleur et par la diversité de son contenu, est un ensemble scientifique considérable, représentant tous les domaines des Arts du spectacle et recouvrant une aire géographique très large. La base de données réalisée tente d’extraire un maximum d’informations des factures des librairies où Rondel s’est fourni, dans le but d’approfondir la recherche sur différents sujets, tels que l’histoire de la collection, du théâtre ou de la circulation du livre ancien. 
+
+L’enjeu principal du mémoire est de présenter l’ensemble du travail réalisé dans la conception de cette base de données, de l’analyse du corpus à l’implémentation dans le logiciel \emph{Heurist} en passant par la modélisation des données. 
+
+La première partie présente l’environnement dans lequel a été réalisé ce travail, présentant le contexte institutionnel, la collection que la base de données entend décrire, mais aussi les factures elles-mêmes. Elle s’appuie également sur un état de l’art conséquent concernant l’utilisation des bases de données dans la recherche et à la BnF. La deuxième partie résume toute la conception de la base de données, partant de l’analyse du corpus et de la modélisation pour aboutir à sa conception avec \emph{Heurist}. Sont examinées, dans une troisième partie de nature plus expérimentale, les différentes solutions envisagées pour les usages ultérieurs de cette base.  
+	
+	\chapter{Summary}
+
+	This master's thesis, entitled \enquote{At the heart of a theatre library : a database from the invoices of Auguste Rondel's collection}, studies the differents steps of the conception of a database using Heurist in a research project led by the Performing Arts Department. This project aims at treating, analyzing and making the most of the archives relating to Auguste Rondel’s library. This theatrical collection, unique in its scope and the diversity of its content, is a huge resource, representing all fields of the performing arts and covering a large geographical area. The database created seeks to extract as much information as possible from the invoices of the bookshops where Rondel bought his collection, in order to improve research about lots of subjects, such as the history of Rondel' collection, theatre, or circulation of antiquarian books.
+
+
+
+The main focus of the master’s thesis is to introduce the hole work made in this database’s conception, including the corpus’ analysis, the implementation with Heurist and data modelling.
+
+
+
+The second part summarises the entire conception of the database, beginning with the analysis of the corpus and modelling, and culminating in its design using Heurist. Differents solutions planned for the database's futures uses are examined in a third part, which is much more experimental. 
+
+
+
+	
+	\textbf{Informations bibliographiques:} Raphaël Hache, \textit{Au cœur d'une bibliothèque théâtrale : une base de données à partir des factures de la collection Auguste Rondel}, mémoire de master \enquote{Technologies numériques appliquées à l'histoire}, dir. [Marina Hervieu], École nationale des chartes, 2026.
+	
+		\newpage{\pagestyle{empty}\cleardoublepage}
+	
+	\chapter{Remerciements}
+	
+\lettrine{J}e tiens tout d'abord à remercier Marina Hervieu d'avoir encadré ce mémoire. Sa bienveillance et ses conseils m'ont beaucoup aidé tout au long de ce travail.
+
+Je remercie évidemment Hélène Keller pour son accueil au sein du département des Arts du spetacle, pour la qualité de son encadrement et sa gentillesse, qui ont grandement participé à mon bien-être tout au long de ce stage. 
+
+Mes remerciements vont aussi à Florence Perret, pour m'avoir encadré, soutenu et conseillé dans ce stage. 
+
+Je souhaite également remercier toute l'équipe du département des Arts du spectacle, pour leur accueil et leur gentillesse tout au long du stage. 
+
+Je suis également très reconnaissant envers Fantin Le Ber, pour sa compagnie et parce qu'il m'a été d'un grand secours sur de nombreuses questions, en particulier les utilisations de l'intelligence artificielle. 
+
+Merci à tous mes camarades de classe pour ces deux merveilleuses années passées avec vous. 
+
+Je remercie chaleureusement Emmanuelle Bermès, qui m'a accordé sa confiance en m'acceptant au sein de ce master. 
+
+Enfin, je n'oublie pas de remercier mes parents pour leur relecture attentive. 
+
+	\newpage{\pagestyle{empty}\cleardoublepage}
+
+%%%%%%%%%%%% \bibliographie ici (normes de l'EnC)
+\section*{Bibliographie}
+\nocite{*} % Cette commande sert à afficher toutes les entrées présentes dans le fichier .bib, y compris celles qui n'ont pas été citées dans le texte. 
+\printbibliography[heading=bnf, keyword=asp]
+\printbibliography[heading=livre, keyword=livre]
+\printbibliography[heading=donnees,keyword=donnees]
+\printbibliography[heading=heurist, keyword=heurist]
+\printbibliography[heading=IA, keyword=IA]
+\printbibliography[heading=sources, keyword=sources]
+
+
+\chapter{Introduction}	
+
+
+Une facture produite par la librairie parisienne Hermal le 28 octobre 1917 liste plusieurs achats d'estampes effectués par Auguste Rondel pour alimenter sa collection personnelle\footnote{BnF ASP, RCOL-1(220).}. En plus de permettre d'identifier leur provenance, elle donne de nombreuses informations sur ces estampes, qui s'accompagnent de commentaires attestant leur rareté. Plus de deux cents factures comme celle-ci documentent les achats faits par Auguste Rondel au début du XX\textsuperscript{e} siècle dans cette librairie, qui apparaît comme un fournisseur d'estampes privilégié par ce collectionneur\footcite{godard_2022}.
+
+
+Pour que ce type de document soit exploitable et utile, notamment à des fins scientifiques, il convient d'en extraire les informations pertinentes, mais aussi de les structurer afin de les rendre accessibles. Ces enjeux sont propres à la notion de \enquote{mise en données}, qui se pose particulièrement en institution patrimoniale. L'expression est traduite du terme anglophone \emph{datafication}, qui désigne le fait de transformer un phénomène en un format quantifié, permettant un calcul et une analyse\footcite[p. 4]{clavert_2020}.  
+Cette ambition est au cœur d'un projet à l'initiative du département des Arts du spectacle de la Bibliothèque nationale de France consistant à traiter, exploiter et valoriser les archives relatives à la bibliothèque d'Auguste Rondel, donnée à l'État en 1920 et à l'origine du département. Auguste Rondel était un banquier originaire de Marseille, surtout connu comme étant un passionné de théâtre. Cela l'a amené à constituer peu à peu une bibliothèque à partir de son immense collection bibliophilique, regroupant tous types d'ouvrages liés aux arts du spectacle, grâce à un vaste réseau de libraires issus de toute l'Europe. La mission, menée sous l'encadrement scientifique d'Hélène Keller\footnote{Hélène Keller est cheffe du service Archives et imprimés au département des Arts du spectacle de la BnF.}, a pour point de départ l'analyse d'un échantillon de factures émises par les libraires suite aux achats de Rondel\footcite{factures_rondel}. L'étude de ces factures aura pour but de modéliser une base de données, puis de préparer son implémentation grâce au logiciel \emph{Heurist}\index{Heurist} sous la supervision de Florence Perret\footnote{Florence Perret est responsable de la valorisation et des données de la recherche, pour la délégation à la Stratégie et à la Recherche de la BnF.
+}. Ces factures proviennent des archives issues de l'activité d'Auguste Rondel et sont disponibles dans le catalogue BnF Archives et Manuscrits sous la cote RCOL. Il s'agit d'un corpus massif dont nous souhaitons extraire des informations de tous types. La création d'une base de données a donc été envisagée pour exploiter ce corpus, pour la faculté de ce système à traiter de nombreux types de données (texte, nombres, choix multiples, …).  
+L'intérêt d'une base de données est également sa capacité à lier toutes les informations entre elles. Nous attendons donc qu'elle offre la possibilité de nous concentrer sur un aspect ou un autre de ces factures (personnes, lieux, …) et d'isoler des informations tout en conservant une certaine cohérence. Cependant, la mise en données de ce corpus sera confrontée à son hétérogénéité, son volume empêchant nécessairement toute vision d'ensemble et le rendant imprévisible. Une base de données pourrait-elle faire face à ces incertitudes ? 
+
+
+\emph{Heurist}\index{Heurist} est le logiciel pressenti pour réaliser ce projet, du fait de sa flexibilité, qui permettrait de s'adapter à la diversité de ce corpus, mais aussi pour son caractère accessible et relativement simple d'utilisation. 
+Son accessibilité est également favorisée par l'aspect \emph{Open Source} du logiciel. En effet, les chercheurs peuvent y avoir accès grâce à la création d'un compte sur un serveur hébergeant \emph{Heurist}\index{Heurist}. Il reste à savoir si cette accessibilité supposée facilitera réellement ses usages ultérieurs, que ce soit par des chercheurs en sciences humaines, des bibliothécaires ou d'autres utilisateurs. 
+
+L'exploitation de ces données a pour finalité de fournir des pistes de recherche sur le sujet, telles que l'étude de cette collection, notamment à travers la recherche de ses provenances. Cela peut également déboucher sur des travaux plus spécifiques, comme une cartographie des réseaux de libraires d'anciens et de la circulation des livres, ou encore l'étude d'une aire géographique particulière ou d'un type de document. Il conviendra donc d'accorder au préalable une importance particulière aux besoins des futurs utilisations de cette base. 
+
+
+Ce travail suppose d'abord de construire un modèle de données permettant de tirer un maximum d'informations utiles de ces factures. Cette modélisation aura pour objectif d'envisager tous les cas de figure susceptibles de se présenter dans les factures et d'être exhaustive même si le degré d'information pourrait varier d'un document à l'autre. À partir de ce modèle, nous tenterons de concevoir cette base de données avec \emph{Heurist}\index{Heurist}, en créant sa structure et en l'alimentant avec les informations issues des factures. L'utilisation d'\emph{Heurist}\index{Heurist} s'accompagne de diverses interrogations relatives aux possibilités d'exploitation des données qu'il nous offre : Que nous apporte ce logiciel en matière de datavisualisation ? Quelles sont ses limites dans ce domaine ? Devra-t-il être complété par d'autres outils ? L'implémentation de cette base est également un enjeu central de la mission, car ces données sont difficiles à traiter, de par leur format, leur densité et leur diversité. Il s'agit donc de réfléchir aux différents moyens d'alimenter la base, notamment en vue de ses potentiels usages ultérieurs. On pourra se demander quelles solutions sont les plus efficaces, lesquelles sont au contraire inenvisageables, ce qui invite de manière générale à se questionner sur les perspectives d'avenir de ce projet. 
+Cette réflexion amène à dépasser les objectifs principaux, à savoir la modélisation de la base et sa conception dans \emph{Heurist}\index{Heurist}, pour s'intéresser aux traitements de données nécessaires pour alimenter massivement la base. Cela explique les quelques expérimentations réalisées en matière de transcription automatique et les recherches faites sur l'utilisation de l'intelligence artificielle dans la reconnaissance d'écritures manuscrites. 
+
+\vspace{1.5cm}
+Tout cela pose donc plusieurs questions : comment des factures de librairie peuvent-elles permettre de retracer l'histoire d'une collection massive aux provenances multiples ? Que nous disent ces factures de l'histoire culturelle de la fin du XIX\textsuperscript{e} et du début du XX\textsuperscript{e}  siècle, et plus généralement de l'histoire des librairies et de la circulation des livres à cette époque ? Comment envisager le traitement informatique d'un corpus papier et son implémentation, alors que celui-ci est non numérisé, hétérogène et difficilement exploitable ? À quel(s) besoin(s) cette base de données devra-t-elle répondre ? Faut-il limiter les objectifs de cette base de données pour se concentrer sur ses enjeux principaux ?
+
+
+\vspace{1.5cm}
+Dans ce mémoire, nous présenterons d'abord le contexte historique et informatique du projet, en nous intéressant à l'histoire du département et de la collection Auguste Rondel, et avec une attention particulière pour les factures Rondel, corpus traité dans ce stage. Cette contextualisation impliquera également un état de l'art des travaux similaires réalisés en institution patrimoniale. Nous nous intéresserons ensuite à la réalisation de cette base de données \emph{Heurist}\index{Heurist} sur les factures Rondel, en en détaillant les différentes étapes, de sa conception intellectuelle à son implémentation, sans oublier ses limites. Cela impliquera aussi de présenter les différentes possibilités offertes par cette base, en ce qui concerne les datavisualisations ou son accessibilité. Nous envisagerons enfin des pistes pour les usages ultérieurs de la base, en présentant les conclusions issues de nos tests de différents outils de transcription automatique. 
+
+
+\newpage{\pagestyle{empty}\cleardoublepage}
+
+%%%%%%%%%%%%%%%%%Le corps du mémoire
+	\mainmatter
+%Trier par dossiers si besoin (front, main,annexes,), se crérer un docuemnt .tex par structure (section ou chapter selon la taille et la pertinence) Exemple de chemin à partir du dossier où se trouve le document maître: ./dossierA/fichier.tex
+
+	
+
+	\part{Contexte institutionnel et technique : une base de données au département des Arts du spectacle de la Bibliothèque nationale de France} 
+%\input{exemple_section1.tex} %Input: importer un fichier
+%etc
+%Ou bien: ne pas mettre chapter, et importer le chapitre complet:
+%\input{mon_chapitre_1.tex}
+%\input{mon_chapitre_2.tex}	
+
+
+Cette première partie vise à présenter l'environnement dans lequel mon travail a pris place, sous différents aspects. Il s'agit d'abord d'une présentation institutionnelle et historique du département des Arts du spectacle de la BnF, permettant de comprendre dans quel contexte le besoin de modéliser une base de données sur les archives Rondel s'est exprimé, et l'importance de la collection Rondel pour le département. Cette partie entend aussi inscrire ce projet de base de données dans la continuité des travaux antérieurs, que ce soit à la BnF ou ailleurs, avec une attention particulière portée aux projets \emph{Heurist}\index{Heurist} déjà réalisés au sein de l'établissement. 
+
+\include{PartieIChapitre1}
+\include{PartieIChapitre2}
+\include{PartieIChapitre3}
+
+\section{Conclusion de la première partie}
+
+En somme, ce besoin de modélisation d'une base de données dans le cadre de l'exploitation des factures Rondel s'explique par l'importance qu'a la collection Rondel dans l'histoire du département, étant à la fois l'origine et le cœur de ses collections. De plus, au vu de leur quantité et de leur diversité, les factures de librairie qui composent les \enquote{Archives Rondel} pourraient nous fournir de nombreuses informations sur la collection, et seraient donc un corpus particulièrement utile à la recherche sur le sujet. Le thème des provenances suscite actuellement un grand intêret dans les établissements patrimoniaux. La forme d'une base de données, privilégiée dans la réalisation de ce travail, a déjà été utilisée à plusieurs reprises, par différents départements de la BnF. Quelques-unes ont déjà été créées avec \emph{Heurist}\index{Heurist}, c'est pourquoi notre projet s'inscrit dans la continuité du déploiement de ce logiciel \emph{Open source} à la BnF.
+
+%etc
+	
+	\part{Réalisation technique : une base de données \emph{Heurist} sur les factures Rondel}
+
+Cette deuxième partie entend présenter toutes les étapes du travail technique réalisé afin d'exploiter les factures Rondel de la manière la plus pertinente possible. Il s'agira donc de retracer toute l'analyse des documents, dans le but d'en extraire les informations utiles et de modéliser une base de données, puis de la concevoir à l'aide d'\emph{Heurist}\index{Heurist}. Nous nous demanderons enfin à quels besoins cette base de données peut répondre, en matière de datavisualisation et de recherche. 
+
+\include{PartieIIChapitre4}
+\include{PartieIIChapitre5}
+\include{PartieIIChapitre6}
+	%etc.
+\section{Conclusion de la deuxième partie}
+
+Dans cette deuxième partie, les différentes étapes de la conception de cette base de données \emph{Heurist}\index{Heurist} ont été présentées. Nous avons vu que celle-ci ne peut pas se faire sans un travail conséquent et extérieur au logiciel au préalable, partant d'une analyse minutieuse des sources dans le but de réaliser un premier modèle de données, et d'une identification des besoins et des usages de la future base de données. Ce travail préparatoire pose les jalons de la conception, cette fois avec \emph{Heurist}\index{Heurist}, de la base qui doit être prioritairement envisagée comme une transcription d'un maximum d'informations issues des factures. Enfin, nous avons pu envisager les différents besoins auxquels peut répondre cette base Heurist, de l'enrichissement des données à leur réutilisation en passant par leur publication, sans oublier les nombreuses datavisualisations envisageables, qu'elles soient nativement intégrées au logiciel ou permises par des exports. Cependant, toutes ces utilisations sont plutôt d'ordre expérimental pour l'instant, et ne peuvent pas être pérennisées sans perspectives claires d'alimentation de cette base de données. 
+
+    \part{Perspectives envisagées pour l'implémentation et les usages ultérieurs de la base de données}
+
+Cette troisième partie entend présenter les perspectives envisagées pour alimenter et implémenter la base. Cette réflexion finale part des constats dressés à ce stade sur les différentes façons possibles d'alimenter la base de données à partir des factures, et sur ce qui est envisageable ou non à long terme pour traiter le reste du corpus. Nous présenterons ensuite les différentes expérimentations faites en ce sens, notamment l'utilisation de l'intelligence artificielle dans le traitement de ces documents et ce qui a été mis en place au sein du département suite à ces réflexions. Nous reviendrons pour finir sur les tentatives échouées ou non abouties dans ces essais. 
+
+\include{PartieIIIChapitre7}
+\include{PartieIIIChapitre8}
+\include{PartieIIIChapitre9}
+
+\section{Conclusion de la troisième partie}
+
+En somme, cette troisième partie a fait le point sur les différents modes d'alimentation de la base de données que nous avons testés à ce stade et nous a permis d'envisager différentes pistes pour ses futurs usages. 
+
+
+	\chapter*{Conclusion générale}
+
+Ce mémoire détaille le projet, porté par le département des Arts du spectacle de la Bibliothèque nationale de France, d'exploiter les archives relatives à la bibliothèque d'Auguste Rondel. Notre propos se focalise sur le traitement des factures émises par les libraires où Auguste Rondel se fournissait pour constituer sa collection, dans l'objectif de concevoir une base de données grâce au logiciel \emph{Heurist}\index{Heurist}. 
+
+
+La première partie entend contextualiser le besoin de modéliser une base de données sur les factures de la collection Auguste Rondel, ce qui suppose d'abord de saisir la place occupée par la collection dans la constitution du département des Arts du spectacle. Celle-ci est à la base de la création du département, qui s'est construit autour d'elle et vise à en assurer la continuité. Avant de présenter la modélisation de la base de données, il convient de revenir sur la composition du corpus exploité, à savoir les factures Rondel, afin de comprendre à quels besoins celui-ci est susceptible de répondre. Cette présentation du corpus nous amène à confirmer qu'une base de données relationnelles est une solution adéquate pour l'exploiter, pour sa capacité à lier de nombreuses données entre elles et à les traiter. Le logiciel \emph{Heurist}\index{Heurist}, servant à la création de bases de données relationnelles, est l'outil privilégié dans notre projet. Ce choix s'explique par son accessibilité sans compétences avancées en programmation, soit à un public relativement large et par sa capacité à répondre aux enjeux propres aux projets de recherche en sciences humaines et sociales. Tous les choix évoqués s'inscrivent nécessairement dans la continuité de pratiques professionnelles et scientifiques, s'appuyant sur un état de l'art pré-existant. Ainsi sont évoquées les différentes bases de données qui existent à la BnF, conçues ou non avec \emph{Heurist}\index{Heurist}. 
+
+
+La deuxième partie s'attache à détailler les différentes étapes de la conception de la base de données, de sa modélisation à son implémentation avec Heurist. Elle commence par revenir sur le travail effectué en amont, à savoir une analyse très précise des sources en vue d'en dégager des thématiques principales servant de socle à la future base. La conception d'une base de données est d'abord intellectuelle et extérieure à tout logiciel, ce qui explique la réalisation d'un modèle de données avant d'utiliser \emph{Heurist}\index{Heurist}. Ce travail s'est accompagné d'hypothèses sur les usages de cette base et les besoins auxquels elle pourrait répondre, même s'il est nécessaire de ne pas trop les anticiper, afin de ne pas restreindre la portée de la base. Tout cela amène à présenter la conception de la base de données avec \emph{Heurist}\index{Heurist}, envisagée en premier lieu comme une extraction stricte des informations issues des factures, puis comme une possibilité d'enrichir ces données, de les réutiliser ou de les visualiser. 
+
+
+La troisième partie sert surtout à dresser un bilan des différentes tentatives d'implémentation de la base de données faites pour l'instant, dans le but d'envisager des perspectives pour ses futurs usages. À partir des estimations effectuées, notre réflexion constate une obligation d'utiliser l'intelligence artificielle pour transcrire les factures, car la taille du corpus rend la saisie manuelle inenvisageable. En partant de l'histoire de la transcription automatique, nous avons pu expérimenter différents outils représentatifs de ce qui existe actuellement dans ce domaine. Ainsi, le chapitre 8 relate en particulier nos essais réalisés avec \emph{Gemini}\index{Gemini}, modèle de langage le plus efficace actuellement dans la transcription, la compréhension et la structuration de données manuscrites. Nous résumons également les tests faits avec \emph{NuExtract3}\index{NuExtract3}, solution \emph{Open Source} d'une efficacité moindre, mais capable malgré tout de réaliser certaines tâches. La conclusion ressortant de tous ces tests est que les futures utilisations de cette base sont soumises à un choix principal. Celui-ci oppose des modèles de langage surpassant largement toutes les autres solutions, mais en consommant énormément d'énergie et en ne protégeant pas du tout les données utilisées, à des solutions Open Source nettement inférieures dans leur capacité, mais moins énergivores et sans fuites de données. Cette partie finit par mentionner les tentatives ratées ou non abouties dans ce travail, dont la prise en compte est essentielle pour comprendre le projet dans son ensemble, mais aussi pour retenir ces idées et les perfectionner en vue d'une continuation de ce projet. 
+
+\vspace{1,5cm}
+Les utilisations futures de cette base de données posent plusieurs questions sur une éventuelle suite de ce projet au sein du département. Tout d'abord, il est légitime de réfléchir aux moyens concrets de poursuivre ce travail, au-delà de tous les aspects très expérimentaux que nous avons évoqués jusqu'à présent. Comme il n'est pas possible de faire travailler les équipes du département des Arts du spectacle à plein temps sur ce projet, l'alimentation de la base pourrait faire l'objet de prestations ou de stages qui y seraient entièrement consacrés. Tous les usages de la base sont entièrement documentés, ce qui invite à poursuivre le travail. Cependant, rien n'empêche de faire des modifications ou des améliorations. Au contraire, celles-ci sont bienvenues si elles permettent de gagner en efficacité. Comme il serait très long d'exploiter le corpus dans son intégralité, on peut aussi se demander si ce projet parviendra à s'installer à long terme au sein du département et malgré des éventuels changements d'équipe. En somme, les pistes explorées pour l'instant offrent surtout un aperçu de ce qui est réalisable et invitent à un déploiement à plus large échelle du traitement des factures Rondel.
+	\addcontentsline{toc}{chapter}{Conclusion}
+\newpage{\pagestyle{empty}\cleardoublepage}
+	
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%
+
+\appendix %Des appendices: tables figures, etc
+
+\chapter{Modélisation de la base de données \enquote{Factures de la collection Auguste Rondel}}
+\clearpage
+\section{Modèle de données}
+
+\begin{figure}[htbp] \fbox{\includegraphics[width=1.0\textwidth]{Images/MLD_derniere_version.png}}
+    \caption{Modèle de données réalisé avec \emph{draw.io}\index{draw.io}.}
+    \label{fig:mld-drawio}
+\end{figure}
+\label{modele donnees}
+
+\newpage
+Il est possible de visualiser ce modèle de données de manière plus précise sur le logiciel \emph{draw.io}\index{draw.io} en cliquant sur le lien suivant : \url{https://app.diagrams.net/#G1rub2hNmAUDRaU_mgHjMSNRP601i0o7sH#%7B%22pageId%22%3A%22nmYLSE-Rn7Mf-2gKj097%22%7D}
+
+\section{\emph{Minimum Viable Product} (MVP)}
+
+Un tableau a été réalisé pour hiérarchiser les priorités en amont de la création de la base de données. Celui-ci est également visible sur \emph{draw.io}\index{draw.io} en cliquant sur le lien suivant : \url{https://app.diagrams.net/#G19YEhMSevG4visk5QzzYGG7j6c19q3Q0G#%7B%22pageId%22%3A%22vw2RHDlUk2C9YS3ShuU5%22%7D}
+\label{MVP}
+
+\chapter{Base de données \emph{Heurist}\index{Heurist} : \enquote{Factures de la collection Auguste Rondel}}
+
+La base de données \enquote{Factures de la collection Auguste Rondel} a été créée avec l'instance du logiciel \emph{Heurist} hebergée par \emph{Huma-num} et est accessible en cliquant sur le lien suivant :
+
+\vspace{1,5cm}
+\url{https://heurist.huma-num.fr/heurist/?db=BnF_ASP_Rondel&w=a&q=sortby%3A-m}
+
+Il est possible de se connecter grâce aux identifiants suivants : 
+
+Username : raphael\_hache
+
+Password : Gabriel22:) 
+
+\chapter{Documentation produite pour les usages ultérieurs de la base}
+\section{Livrable de recommandations - usages ultérieurs de la base Heurist\index{Heurist} sur les factures Rondel}
+\label{documentation}
+
+Cette annexe est un document d'une trentaine de pages, répondant à une demande de mes encadrantes et destiné aux futurs utilisateurs de cette base. Elle dresse d'abord une typologie des factures rencontrées dans l'échantillon utilisé, puis détaille les différentes façons d'exploiter les factures et d'alimenter la base (transcription automatique, saisie manuelle, ...). L'objectif est de documenter le projet, mais aussi d'envisager sa continuation en donnant des recommandations. 
+
+Le document est accessible par le lien suivant : 
+\url{https://github.com/Raphhache/HACHE_annexes_memoire_M2/blob/main/HACHE_Raphael_Recommandations_usages_base-2.pdf}
+
+\pagebreak
+\section{Documentation et recommandations sur l'usage de l'IA dans l'exploitation des factures}
+\label{doc IA}
+Cette documentation rend compte des tous les tests de transcription automatique réalisés dans le cadre de mon stage. Il s'agit d'un bilan, mais aussi de recommandations pour qui souhaite expérimenter tous ces outils sur ce corpus ou sur d'autres. Le lien suivant permet de la consulter : 
+
+\url{https://github.com/Raphhache/HACHE_annexes_memoire_M2/blob/main/transcription%20automatique%20des%20factures%20-%20tests%2C%20prompts%20et%20recommandations.pdf}
+
+\chapter{Datavisualisations}
+
+\clearpage
+\section{Réseaux}
+\subsection{Réseaux réalisés avec \emph{Heurist}\index{Heurist}}
+\label{reseaux heurist}
+
+\begin{figure}[htbp]
+    \centering
+ \fbox{\includegraphics[width=1.0\textwidth]{Images/reseau_table_personnes_net.png}} % Nouvelle commande utilisée : la commande "fbox", qui permet de mettre des contours autour d'une image. Je l'ai beaucoup utilisée dans mes annexes car de nombreuses images étaient faites sur fond blanc. 
+    \caption{Réseau visible dans la base \emph{Heurist}\index{Heurist} représentant l'ensemble des relations modélisées dans la table \enquote{personne}.}
+    \label{fig:reseau-personnes-heurist}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+   \fbox{\includegraphics[width=0.8\textwidth]{Images/reseau_corresp_Rondel.png}}
+    \caption{Zoom sur le réseau constitué autour d'Auguste Rondel, relié à tous les libraires avec lesquels il a entretenu une correpondance.}
+    \label{fig:reseau-rondel}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+   \fbox{\includegraphics[width=0.8\textwidth]{Images/reseau_saffroy.png}}
+    \caption{Zoom sur le réseau modélisant la famille Saffroy, qui a fait l'objet d'une recherche approfondie dans le cadre de notre travail (Voir p. 57).}
+    \label{fig:reseau-saffroy}
+\end{figure}
+
+
+\newpage
+\subsection{Exemple d'export d'un réseau de la base avec \emph{gephi}\index{Gephi} : la table \enquote{personne}}
+\label{reseau gephi}
+\begin{figure}[htbp]
+    \centering
+ \fbox{\includegraphics[width=0.8\textwidth]{Images/personnes.png}}
+    \caption{Export de toutes les relations de la table personne en format .gexf dans le but de visualiser le réseau et de le mettre en forme sur le logiciel \emph{gephi}\index{Gephi}. Les noeuds (= personnes) sont représentés en bleu, et les liens (= relation) en rouge.}
+    \label{fig:reseau-gephi}
+\end{figure}
+
+\newpage
+
+\section{Cartes}
+\subsection{Cartes réalisées avec \emph{Heurist}\index{Heurist}}
+\label{cartes heurist}
+
+
+\begin{figure}[htbp]
+    \centering
+ \fbox{\includegraphics[width=0.9\textwidth]{Images/Carte_adresses_base.png}}
+    \caption{Carte de toutes les librairies géoréférencées dans la base, grâce au champ \enquote{coordonnées geographiques} de la table \enquote{lieu}.}
+    \label{fig:carte-adresses}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+ \fbox{\includegraphics[width=0.9\textwidth]{Images/zoom_Paris.png}}
+    \caption{Zoom sur les librairies parisiennes.}
+    \label{fig:librairies-paris}
+\end{figure}
+
+
+\clearpage
+\subsection{\emph{QGIS}}
+\label{carte qgis}
+\vspace{1,5cm}
+\begin{figure}[htbp]
+    \centering
+ \fbox{\includegraphics[width=16cm]{Images/carte_libraires_europe_v2.png}}
+    \caption{Carte réalisée avec le logiciel \emph{QGIS}\index{QGIS} grâce à l'export des données cartographiques de la table \enquote{lieu} en format .geojson.}
+    \label{fig:carte-qgis-europe}
+\end{figure}
+\newpage
+\subsection{Plateforme Galligeo\index{Galligeo}}
+\label{carte galligeo}
+
+
+\begin{figure}[htbp]
+    \centering
+ \fbox{\includegraphics[width=15cm]{Images/georef_pt_ctrle.png}}
+    \caption{Géoréférencement par points de contrôle sur Galligeo\index{Galligeo}.}
+    \label{fig:georeferencement-galligeo}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+ \fbox{\includegraphics[width=15cm]{Images/indexation_librairies_marseille.png}}
+    \caption{Indexation de toutes les librairies marseillaises où Auguste Rondel s'est fourni, sur un fonds de carte datant de 1931.}
+    \label{fig:librairies-marseille}
+\end{figure}
+
+La carte ayant servi à tester cet outil est accessible en cliquant sur le lien suivant : 
+\url{https://gallica.bnf.fr/ark:/12148/btv1b53213328n}
+
+\clearpage
+\section{Site web développé à partir de la base de donées}
+\label{website}
+
+\vspace{1,5cm}
+Le site internet CMS développé à partir de la base de données est accessible en cliquant sur le lien suivant : 
+
+\url{https://heurist.huma-num.fr/heurist?db=BnF_ASP_Rondel&website=1823&pageid=1841}
+\vspace{1,5cm}
+\begin{figure}[htbp]
+    \centering
+ \fbox{\includegraphics[width=0.8\textwidth]{Images/page site web.png}}
+    \caption{Page \enquote{lieu} du site web.}
+    \label{fig:site-web-lieu}
+\end{figure}
+
+
+
+\newpage
+
+\chapter{Utilisations de l'intelligence artificielle dans le traitement des factures Rondel}
+\section{Tests : exploitation du corpus à l'aide de l'intelligence artificelle}
+
+\subsection{Tests réalisés avec \emph{Gemini}\index{Gemini}}
+\label{prompt gemini}
+
+\vspace{1,5cm}
+\underline{Prompt :}
+\vspace{1,5cm}
+
+Voici une page de facture, peux-tu en extraire les informations sous forme de fichier csv ? 
+
+structure l'information dans les colonnes suivantes : titre, auteur, lieu, éditeur, date, devise d'origine, prix oeuvre, nombre volumes/unités/fascicules, nombre exemplaires, numéro du catalogue, langue, format, commentaire oeuvre, H-ID facture, Série/sous-série
+
+mets uniquement des nombres entiers pour le nombre de volumes et le nombre d'exemplaire 
+
+écris simplement le nom de la devise, sans abréviation 
+
+mets la devise au singulier et sans majuscule 
+
+Dans la colonne "H-ID facture", ajoute  <l'identifiant Heurist correspondant à la facture> sur toutes les lignes 
+
+fais en sorte que les dates respectent le format date, ou mets "circa" quand c'est une date approximative  
+
+Écris dans "type de notice" à quelle catégorie l'oeuvre appartient parmi les suivantes : 
+
+
+archives
+dessin
+estampe
+monographie
+périodique
+photographie
+reliure
+
+
+
+
+Identifie les thématiques de chaque oeuvre et classe les parmi les intervalles de cotes suivants : 
+
+
+RA (Fêtes)
+RA1-87 (Pyrotechnie)
+RA2 1-125 (Châteaux)
+RA3 1-387 (Spectacles de cour en France)
+RA4 1-1788 (Fêtes et entrées françaises)
+RA5 1-1574 (Fêtes et entrées italiennes)
+RA6-RA17 (Fêtes et spectacles de cour : Allemagne, Autriche, Angleterre, Espagne, Belgique, ...)
+
+
+RAE (Estampes : fêtes, spectacles de cour)
+RE (Théâtre étranger)
+RE 1-1314 (Théâtre grec)
+RE 11200-11999 (Théâtre américain)
+RE 12000-15349 (Théâtre allemand)
+RE 1315-1934 (Théâtre latin)
+RE 15371-15752 (Théâtre hollandais)
+RE 15756-15807 (Théâtre flamand)
+RE 15816-17131 (Théâtre belge)
+RE 17151-17917 (Théâtre d'Europe centrale et des Balkans)
+RE 17918-18592 (Théâtre russe)
+RE 18593-18599 (Théâtre ukrainien)
+RE 18610-19579 (Théâtre scandinave)
+RE 1935-2458 (Théâtre oriental)
+RE 19581-20126 (Théâtre suisse)
+RE 2459-6055 (Théâtre italien)
+RE 6056-7199 (Théâtre espagnol)
+RE 6961-7024 (Théâtre portugais)
+RE 7125-7182 (Théâtre latino-américain)
+RE 7200-11199 (Théatre anglais)
+RE 10993-11063 (Théâtre irlandais)
+RE 7578-8838 (Théâtre élizabethain)
+RE 7893-8788 (Shakespeare)
+RF (Théâtre français)
+RF 1-962 (Théâtre français - Moyen Age)
+RF 15200-19899 (Théâtre français - XVIIIè siècle - Révolution)
+RF 1578-7390 (Théâtre français - XVIIè siècle)
+RF 19900-36993 (Théâtre français - XIXè siècle : 1800-1850)
+RF 36994-49478 (Théâtre français - XIXè siècle : 1850-1890)
+RF 49501-75078 (Théâtre français - XXè siècle : 1890-1936)
+RF 7391-11135 (Théâtre français - XVIIIè siècle)
+RF 75101-75688 (Théâtre des Jésuites)
+RF 75701-76368 (Fêtes de province)
+RF 76369-81107 (Théâtre des provinces et des colonies)
+RF 81108-81978 (Théâtre de plein air)
+RF 82311-82608 (Théâtre aux armées)
+RF 82610-84553 (Théâtre de société)
+RF 84554-86924 (Théâtre pour la jeunesse)
+RF 87010-87242 (Noëls)
+RF 87250-87516 (Théâtre de la passion)
+RF 87520-87935 (Jeanne d'Arc)
+RF 87940-88093 (Napoléon)
+RF 963-1577 (Théâtre français - XVIè siècle)
+RJ (périodiques, mémoires, histoires littéraires)
+RJ 1-540 (Périodiques français)
+RJ 1300-3039 (Histoire littéraire : genres)
+RJ 3040-3491 (Cercles, sociétés littéraires, presse)
+RJ 3600-4401 (Critique dramatique
+RJ 4402-4839 (Genres dramatiques)
+RJ 550-625 (Périodiques étrangers)
+RJ 760-1277 (Mémoires et biographies)
+RK (Cinéma)
+RK 1358-15395 (Liste alphabétique de films et suppléments)
+RK 15396-16531 (Sources littéraires et adaptations de films)
+RK 16600-19614 (Acteurs de cinéma)
+RK 19620-19973 (Périodiques français et étrangers)
+RK1-1357 (Généralités sur le cinéma, matériel publicitaire de films, production)
+RO (Musique)
+RO 1-586 (Généralités sur la musique)
+RO 13101-13372 (Carnaval)
+RO 13383-13853 (Marionnettes, Guignol, Ombres)
+RO 13860-16444 (Chanson, Music-hall, Cabaret)
+RO 1559-2182 (Commedia dell'arte, Théâtre de la foire, Opéra-comique)
+RO 16445-16461 (Revues de music-hall)
+RO 16480-17586 (Cirque)
+RO 17590-17857 (Sports, Tauromachie, divers)
+RO 17900-19151 (Revues)
+RO 2267-4488 (Compositeurs français)
+RO 4490-5975 (Art lyrique français)
+RO 587-1558 (Opéra)
+RO 6000-7662 (Musique allemande)
+RO 6713-7400 (Wagner)
+RO 7670-9673 (Musique des autres pays)
+RO 9700-13100 (Danse)
+RT (Histoire du théâtre)
+RT 1-1405 (Histoire du théâtre)
+RT 11451-13266 (Architecture)
+RT 1406-1704 (Histoire des théâtres)
+RT 4781-11418 (Acteurs)
+
+Écris l'intervalle auquel l'œuvre appartient dans la colonne "Série-sous-série". 
+
+\begin{figure}[htbp]
+    \centering
+ \fbox{\includegraphics[width=0.7\textwidth]{Images/Hermal_8.jpeg}}
+    \caption{Facture produite par le libraire Hermal, testée avec ce prompt ((BnF ASP, RCOL-1(220)). La facture est à mettre en pièce jointe du prompt.}
+    \label{fig:facture-hermal-prompt}
+\end{figure}
+
+\newpage 
+\underline{Fichier CSV réalisé par \emph{Gemini}\index{Gemini} à partir de cette facture :}
+\vspace{1,5cm}
+
+\url{https://github.com/Raphhache/HACHE_annexes_memoire_M2/blob/main/facture_10_juin_1920_test.csv}
+
+\begin{figure}[htbp]
+    \centering
+ \fbox{\includegraphics[width=0.9\textwidth]{Images/csv transcription gemini.png}}
+    \caption{Visualisation du fichier CSV depuis \emph{Heurist}\index{Heurist}.}
+    \label{fig:csv-gemini}
+\end{figure}
+
+\clearpage 
+\subsection{Test réalisé avec une solution d'IA \emph{Open Source} : \emph{NuExtract3}\index{NuExtract3}}
+\label{nuextract3}
+
+\begin{figure}[htbp]
+    \centering
+ \fbox{\includegraphics[width=0.9\textwidth]{Images/Marinis_2.jpeg}}
+    \caption{Facture issue d'un ensemble de factures produites le 2 mai 1919 par la librairie de Marinis située à Florence. Ce document a été utilisé pour tester \emph{NuExtract3}\index{NuExtract3}.}
+    \label{fig:facture-marinis}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=4cm]{Images/json_entree.png}
+    \caption{Schéma JSON fourni en entrée pour indiquer la structuration des données que l'on souhaite.}
+    \label{fig:schema-json-entree}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=8cm]{Images/json_sortie_1.png}
+    \caption{Transcription automatique de la facture ci-dessus réalisée par \emph{NuExtract3}\index{NuExtract3}.}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=6cm]{Images/json_sortie_2.png}
+    \caption{Suite de la transcription.}
+    \label{fig:json-sortie-suite}
+\end{figure}
+
+\clearpage 
+\underline{Script Python :}
+
+Le script Python sert à convertir la transcription en un fichier 
+prêt à être importé dans la base. Il a été réalisé via \emph{Google Colab}\index{Google Colab}, dans le \emph{notebook} suivant :
+\newline
+\url{https://colab.research.google.com/drive/1f23yOmnSwnRIcXEBJb21ryErINrL_POY}
+
+
+\vspace{1,5cm}
+Lien vers le fichier CSV généré par ce script : 
+\url{https://github.com/Raphhache/HACHE_annexes_memoire_M2/blob/main/Marinis_facture_NuExtract3.csv}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=15cm]{Images/CSV script python NuExtract3.png}
+    \caption{Image du fichier CSV généré par le script.}
+    \label{fig:csv-nuextract}
+\end{figure}
+
+\clearpage
+\section{Exemple d'un dossier de factures numérisées}
+\label{numerisation}
+Le lien suivant permet de visualiser un dossier de factures Rondel numérisé et accessible sur Gallica : 
+\url{https://gallica.bnf.fr/ark:/12148/btv1b108542870}
+
+%\input{fichier.tex}
+
+\newpage{\pagestyle{empty}\cleardoublepage}
+
+%%%%%%%%%%%%%%%%%%
+
+\backmatter % glossaire, index, table des figures, table des matières.. (la bibliographie a déjà été appelée)
+
+\printindex % Appelle l'index des logiciels mentionnés dans le mémoire 
+%\printglossaries[title=Glossaire]
+%\listoftables
+
+
+\listoffigures % Affiche la liste des figures 
+\tableofcontents
+\end{document}
